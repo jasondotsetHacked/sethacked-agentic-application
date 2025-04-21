@@ -1,0 +1,33 @@
+{
+  "name": "sethacked-agentic-application",
+  "version": "0.0.1",
+  "description": "An agent system where a central database is used to guide the agents to function like they are in a real enterprise.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasondotsetHacked/sethacked-agentic-application.git"
+  },
+  "keywords": [
+    "AI",
+    "Agentic",
+    "Agent",
+    "Autonomous"
+  ],
+  "author": "Jason Clay",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/jasondotsetHacked/sethacked-agentic-application/issues"
+  },
+  "homepage": "https://github.com/jasondotsetHacked/sethacked-agentic-application#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express.js": "^1.0.0",
+    "openai": "^4.95.1",
+    "sqlite3": "^5.1.7"
+  }
+}

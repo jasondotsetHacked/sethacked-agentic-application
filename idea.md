@@ -1,96 +1,78 @@
-**Application Overview**  
-We’re building our autonomous‑agent system like a real enterprise, with Executive Leadership, Management layers, and Functional Departments. A unified dashboard lets you track agent activity and data in real time, while the Agent Control Panel (see below) gives you four control modes—Autonomous, Step‑Through, Human‑in‑the‑Loop, and Temporal Controls (rewind, fast‑forward, pause, etc.). You’re always in full control.
+## **Application Overview**  
+We’re designing an agentic system modeled after a real-world enterprise—with Executive Leadership, layered Management, and specialized Functional Departments. Agents operate autonomously or collaboratively, guided by SOPs and data. A unified dashboard tracks real-time activity and performance, while the Agent Control Panel gives administrators fine-grained control over how agents behave: from fully autonomous to tightly guided.
+
+Control modes include **Autonomous**, **Step‑Through**, and **Human‑in‑the‑Loop**, with **Temporal Controls** to pause, rewind, fast-forward, or branch workflows. The system ensures strategic oversight, operational precision, and continuous learning.
 
 ---
 
-### Executive Leadership  
+### **Executive Leadership**  
 - Defines vision, strategic goals, and key success metrics  
-- Reviews program‑wide performance dashboards  
-- Approves major SOP updates, budget allocations, and tool roll‑outs  
+- Reviews global KPIs and operational health via live dashboards  
+- Approves major SOP changes, resource allocations, and tool integrations  
 
 ---
 
-### Management Layers  
-- Serve as the bridge between Executive Leadership and Functional Departments  
-- Coordinate cross‑department initiatives and resource planning  
-- Monitor aggregated KPIs (throughput, error rate, latency) and surface issues upward  
-- Facilitate escalations and ensure alignment with strategic priorities  
+### **Management Layers**  
+- Bridge strategy and execution—linking Leadership with Departments  
+- Oversee cross-functional coordination and capacity planning  
+- Monitor org-level KPIs (throughput, latency, error rate)  
+- Handle escalations and ensure alignment with strategic goals  
 
 ---
 
-### Functional Departments  
-Data Extraction, Analysis, Reporting, Marketing, Sales, Engineering, etc. Agents work in sub‑teams, consulting SOPs, tools, and data to complete tasks.  
+### **Functional Departments**  
+Departments like Data, Marketing, Engineering, Sales, etc., house teams of agents who execute tasks using SOPs, tools, and shared data. Agents collaborate or work independently depending on role and context.  
 
 ---
 
-### Continuous Improvement Department  
-- Houses the master library of SOPs, instruction templates, and tool definitions  
-- Continuously audits utilization, identifies skill gaps, and spots bottlenecks  
-- Runs controlled experiments on new SOPs and tools and measures impact  
-- Retrains agents, updates instructions, and reassigns capacity based on data  
+### **Continuous Improvement Department**  
+- Maintains the centralized library of SOPs, tools, and templates  
+- Audits agent behavior, tracks performance, and identifies friction points  
+- Runs experiments to refine SOPs, improve toolchains, and train agents  
+- Enables agents to evolve SOPs via generational learning loops  
 
 ---
 
-### Agent Control & Interaction  
-- **Dashboard & KPIs**: filterable tables, real‑time charts, and high‑level metrics for every organizational layer  
-- **Agent Control Panel**:  
-  - **Autonomous Mode** – full hands‑off execution  
-  - **Step‑Through Mode** – pause between decisions to inspect and tweak  
-  - **Human‑in‑the‑Loop** – intervene at any sub‑step, then hand back off  
-  - **Temporal Controls** – rewind, fast‑forward, pause, speed up, or slow down  
+### **Agent Control & Interaction**  
+**Admin tools to monitor, guide, and refine agent behavior in real time:**  
+
+- **Live Dashboard**  
+  - Filterable tables, KPIs, and metrics across departments  
+  - Task timelines, decision logs, and performance visualizations  
+
+- **Agent Control Panel**  
+  - **Autonomous Mode** – Full hands-off execution  
+  - **Step‑Through Mode** – Review each action before approval  
+  - **Human‑in‑the‑Loop** – Drop in at any point to intervene, then resume  
+  - **Temporal Controls** – Rewind, pause, branch, or fast-forward execution  
 
 ---
 
-### Feedback & Escalation Loop  
-1. Agents emit task outcomes, logs, and performance metrics to their Department Managers  
-2. Managers escalate trends, roadblocks, or opportunities to Continuous Improvement and Executive Leadership  
-3. Continuous Improvement analyzes aggregated data, runs improvement sprints on SOPs and tools, and measures lift  
-4. Updated SOPs, instruction templates, and tools are deployed back to Functional Departments  
-5. Executive Leadership reviews overall health, recalibrates strategy, and green‑lights major changes  
+## **Development Tech Stack**
 
-> This closed‑loop, data‑driven process ensures continuous learning, alignment, and strategic oversight—mirroring the cadence of a high‑performing enterprise.
-
----
-
-## Development Tech Stack
-
-#### Frontend  
-- Unified dashboard and control panel built with vanilla HTML, CSS, and JavaScript  
+### **Frontend**  
+- Built with vanilla HTML, CSS, and JavaScript  
 - Features:  
-  - Customizable, filterable tables of tasks, agents, and KPIs  
-  - Real‑time log streaming and decision‑tree explorer  
-  - Controls for Autonomous, Step‑Through, Human‑in‑the‑Loop, and Temporal Controls  
+  - Unified dashboard and agent control panel  
+  - Real-time log streaming and decision-tree visualizer  
+  - Modes: Autonomous, Step‑Through, Human‑in‑the‑Loop, and Temporal Controls  
 
-#### Backend  
-- Node.js + Express.js server/API  
-- SQLite3 for local storage of tasks, SOPs, logs, and audit trails  
-- OpenAI Responses API powering agent reasoning and task execution  
+### **Backend**  
+- **Node.js + Express.js** for server-side logic and routing  
+- **SQLite3** for local storage of agent tasks, SOPs, logs, and audit trails  
+- **OpenAI Responses API** for reasoning, decision-making, and task execution  
 
 ---
 
 ```text
-agentic-application/
+sethacked-agentic-application/
 ├── package.json
 ├── .env
-├── README.md
 ├── public/
-│   ├── css/
-│   ├── js/
-│   │   ├── dashboard.js
-│   │   └── controller.js
 │   └── index.html
 └── src/
     ├── index.js
-    ├── routes/
-    ├── controllers/
-    │   └── agentController.js
-    ├── db/
-    │   ├── database.db
-    │   └── index.js
-    ├── agents/
-    │   ├── baseAgent.js
-    │   └── departments/
-    └── tools/
-        ├── general/
-        └── departments/
+    └── data/
+        ├── database.db
+        └── index.js
 ```
