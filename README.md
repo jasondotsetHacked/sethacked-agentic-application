@@ -9,7 +9,7 @@ Check out [idea.md](idea.md) for more details on the project.
 npm install
 ```
 
-4) Create a `.env` file in the root directory, check out the `.env.example` for reference.
+4) Create a `.env` file in the root directory, check out the [.env.sample](.env.sample) file for reference.
 
 5) Start the server:
 ```bash
