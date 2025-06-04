@@ -1,11 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agentic Application</title>
+  <meta charset="UTF-8">
+  <meta name="viewport"content="width=device-width, initial-scale=1.0">
+  <title>Sidebar with Tabs & Dynamic Cards</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    * { box-sizing: border-box; }
+    html,body { margin:0; padding:0; height:100%; font-family:sans-serif; }
+    h2,h3 { margin:0; }
+    button { cursor:pointer; }
+
+    /* ===== LAYOUT GRID ===== */
+    .container {
+      --sidebar-w: 250px;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 8px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .sidebar {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-right: 1px solid #000;
+      min-width: 0; min-height: 0;
+    }
+    .identity {
+      padding:10px; background:#f0f0f0;
+      border-bottom:1px solid #000; user-select:none;
+    }
+    .handle { background:#ddd; cursor:col-resize; }
+    .main {
+      position: relative; padding:20px;
+      overflow-y:auto; background:#fff;
+    }
+    .main .back {
+      display:none; position:absolute; top:10px; right:10px;
+      padding:6px; background:#eee; border:none;
+    }
+    @media(max-width:768px) {
+      .container { grid-template-columns:1fr; grid-template-rows:1fr auto; }
+      .handle { display:none; }
+      .sidebar { grid-row:1; }
+      .main    { grid-row:1; display:none; }
+      .main .back { display:block; }
+      .container.show-main .sidebar { display:none; }
+      .container.show-main .main    { display:block; }
+    }
+
+    /* ===== PANEL ===== */
+    .panel {
+      display:grid;
+      grid-template-rows: auto 1fr auto;  /* tabs / content / footer */
+      border-bottom:1px solid #000;
+      min-height:0;
+    }
+    /* TAB BAR */
+    .tabs {
+      display:flex; overflow-x:auto;
+      background:#e8e8e8; padding:4px 8px;
+      border-bottom:1px solid #ccc;
+    }
+    .tab {
+      flex:0 0 auto;
+      padding:6px 12px; margin-right:4px;
+      background:#fafafa; border:1px solid #ddd;
+      border-bottom:none; border-radius:4px 4px 0 0;
+    }
+    .tab.active {
+      background:#fff; font-weight:bold; border-color:#aaa;
+    }
+    .add-tab {
+      flex:0 0 auto;
+      padding:6px 12px; background:#d0d0d0;
+      border:1px solid #bbb; border-radius:4px;
+      font-weight:bold;
+    }
+
+    /* SCROLLABLE CONTENT */
+    .scroll {
+      padding:0 10px;
+      overflow-y:auto;
+      background:#fafafa;
+    }
+    .tab-panel {
+      display:none;
+    }
+    .tab-panel.active {
+      display:block;
+    }
+    .card {
+      margin:8px 0; padding:8px;
+      border:1px solid #666; background:#fff;
+      cursor:pointer;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding:8px 10px; background:#f9f9f9;
+      border-top:1px solid #ccc;
+    }
+    .footer button { width:100%; padding:6px; }
+  </style>
 </head>
 <body>
-    <h1>Welcome to the Agentic Application</h1>
+
+<div class="container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="identity"><h2>Identity control</h2></div>
+    <div class="panel dataviewer">
+      <div class="tabs" id="db-tabs">
+        <button class="add-tab" id="add-data-tab-btn">+</button>
+      </div>
+      <div class="scroll tab-panels" id="db-panels">
+        <!-- panels generated from IndexedDB -->
+      </div>
+      <div class="footer">
+        <button id="add-data-btn">+ New Data Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAG HANDLE -->
+  <div class="handle" id="drag-handle"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main" id="main">
+    <button class="back" id="back-btn">&larr; Back</button>
+    <h2>Main content</h2>
+    <p>Select something from the sidebar…</p>
+  </div>
+</div>
+
+<script>
+ (async function(){
+   const container = document.querySelector('.container');
+
+   /*** RESIZE SIDEBAR ***/
+   const handle = document.getElementById('drag-handle');
+   let dragging = false;
+   handle.addEventListener('mousedown', ()=>{ dragging=true; document.body.style.cursor='col-resize'; });
+   document.addEventListener('mousemove', e=>{
+     if(!dragging) return;
+     let w = Math.max(120, Math.min(window.innerWidth-100, e.clientX));
+     container.style.setProperty('--sidebar-w', w+'px');
+   });
+   document.addEventListener('mouseup', ()=>{ dragging=false; document.body.style.cursor=''; });
+
+   /*** TAB MANAGER ***/
+   class TabManager {
+     constructor(tabsEl, panelsContainer){
+       this.tabsEl  = tabsEl;
+       this.panels  = panelsContainer;
+       this.counter = 0;
+       this.meta    = {};
+       tabsEl.addEventListener('click', e=>{
+         if(e.target.matches('.tab')) this.switchTo(e.target.dataset.tab);
+       });
+     }
+     switchTo(id){
+       // highlight
+       this.tabsEl.querySelectorAll('.tab').forEach(t=>
+         t.classList.toggle('active', t.dataset.tab===id)
+       );
+       // show panel
+       this.panels.querySelectorAll('.tab-panel').forEach(p=>
+         p.classList.toggle('active', p.id===id)
+       );
+       // notify
+       this.tabsEl.dispatchEvent(new CustomEvent('tabchange',{detail:id}));
+     }
+     addTab(plural, singular, id){
+       const tabId = id || (this.tabsEl.id + '-custom-' + (++this.counter));
+       // create tab button
+       const btn = document.createElement('button');
+       btn.className = 'tab';
+       btn.textContent = plural;
+       btn.dataset.tab = tabId;
+       this.tabsEl.insertBefore(btn, this.tabsEl.querySelector('.add-tab'));
+       // create panel
+       const p = document.createElement('div');
+       p.className = 'tab-panel';
+       p.id = tabId;
+       this.panels.appendChild(p);
+       // save meta
+       this.meta[tabId] = { plural, singular, panelEl: p };
+       // show it
+       this.switchTo(tabId);
+       return tabId;
+     }
+     getActiveId(){
+       return this.tabsEl.querySelector('.tab.active').dataset.tab;
+     }
+   }
+   // ---- IndexedDB helpers ----
+   let db;
+   const openDB = () => new Promise((res,rej)=>{
+     const req = indexedDB.open('DataViewerDB',1);
+     req.onupgradeneeded = e => {
+       const d = e.target.result;
+       if(!d.objectStoreNames.contains('tables')) d.createObjectStore('tables',{keyPath:'tableName'});
+       if(!d.objectStoreNames.contains('records')){
+         const st = d.createObjectStore('records',{keyPath:'id',autoIncrement:true});
+         st.createIndex('tableName','tableName',{unique:false});
+       }
+     };
+     req.onsuccess = e=>res(e.target.result);
+     req.onerror   = e=>rej(e.target.error);
+   });
+   const getTables = ()=> new Promise((res,rej)=>{
+     const tx = db.transaction('tables','readonly');
+     const store = tx.objectStore('tables');
+     const rq = store.getAll();
+     rq.onsuccess = ()=>res(rq.result);
+     rq.onerror   = ()=>rej(rq.error);
+   });
+   const addTable = (plural,singular)=> new Promise((res,rej)=>{
+     const tx = db.transaction('tables','readwrite');
+     const store = tx.objectStore('tables');
+     const t = plural;
+     const rq = store.add({tableName:t,plural,singular});
+     rq.onsuccess = ()=>res(t);
+     rq.onerror   = ()=>rej(rq.error);
+   });
+   const getRecords = table=> new Promise((res,rej)=>{
+     const tx = db.transaction('records','readonly');
+     const idx= tx.objectStore('records').index('tableName');
+     const rq = idx.getAll(table);
+     rq.onsuccess = ()=>res(rq.result);
+     rq.onerror   = ()=>rej(rq.error);
+   });
+   const addRecord = (table,name)=> new Promise((res,rej)=>{
+     const tx = db.transaction('records','readwrite');
+     const store = tx.objectStore('records');
+     const rq = store.add({tableName:table,name});
+     rq.onsuccess = ()=>res(rq.result);
+     rq.onerror   = ()=>rej(rq.error);
+   });
+
+   // ---- initialize DB and UI ----
+   /*** DATA VIEWER MODULE ***/
+   // instantiate tab manager
+   const dbTabs = new TabManager(
+     document.getElementById('db-tabs'),
+     document.getElementById('db-panels')
+   );
+   const addDataBtn    = document.getElementById('add-data-btn');
+   const addDataTabBtn = document.getElementById('add-data-tab-btn');
+
+   // open DB and load persisted tables
+   db = await openDB();
+   const tables = await getTables();
+   const footer = document.querySelector('.panel.dataviewer .footer');
+   if(tables.length === 0) {
+     footer.style.display = 'none';
+   } else {
+     footer.style.display = 'block';
+   }
+   for(const t of tables){
+     const id = await dbTabs.addTab(t.plural, t.singular, t.tableName);
+     const recs = await getRecords(t.tableName);
+     recs.forEach(r=>{
+       const card = document.createElement('div');
+       card.className = 'card'; card.textContent = r.name;
+       card.addEventListener('click', ()=> loadView(r.name));
+       dbTabs.meta[id].panelEl.appendChild(card);
+     });
+   }
+   if(tables.length>0) dbTabs.switchTo(tables[0].tableName);
+
+   // ---- MAIN CONTENT HELPERS ----
+   const main    = document.getElementById('main');
+   const backBtn = document.getElementById('back-btn');
+   function bindBack(){
+     const b = document.getElementById('back-main');
+     if(!b) return;
+     b.addEventListener('click', ()=>{
+       if(window.innerWidth<=768) container.classList.remove('show-main');
+       else loadDefault();
+     });
+   }
+   function flipMobile(){ if(window.innerWidth<=768) container.classList.add('show-main'); }
+   function loadDefault(){
+     main.innerHTML = `
+       <button class="back" id="back-main">&larr; Back</button>
+       <h2>Main content</h2>
+       <p>Select something from the sidebar…</p>
+     `;
+     bindBack();
+     if(window.innerWidth<=768) container.classList.remove('show-main');
+   }
+   function loadView(title){
+     main.innerHTML = `
+       <button class="back" id="back-main">&larr; Back</button>
+       <h2>${title}</h2>
+       <p>Details about <strong>${title}</strong> …</p>
+     `;
+     bindBack(); flipMobile();
+   }
+   function loadIdentity(){
+     main.innerHTML = `
+       <button class="back" id="back-main">&larr; Back</button>
+       <h2>Identity control</h2>
+       <p>Configure your identity here.</p>
+     `;
+     bindBack(); flipMobile();
+   }
+   document.querySelector('.identity').addEventListener('click', loadIdentity);
+   backBtn.addEventListener('click', ()=>{
+     if(window.innerWidth<=768) container.classList.remove('show-main');
+     else loadDefault();
+   });
+   window.addEventListener('resize', ()=>{ if(window.innerWidth>768) container.classList.remove('show-main'); });
+
+  // update footer text on tab switch
+  dbTabs.tabsEl.addEventListener('tabchange', e=>{
+    const m = dbTabs.meta[e.detail];
+    addDataBtn.textContent = `+ New ${m.singular}`;
+  });
+  // set initial footer button label if there are tables
+  if (tables.length > 0) {
+    const m = dbTabs.meta[dbTabs.getActiveId()];
+    addDataBtn.textContent = `+ New ${m.singular}`;
+  }
+  // clicking "+ New ..." loads card form
+  addDataBtn.addEventListener('click', async ()=>{
+     const id = dbTabs.getActiveId();
+     const { singular, panelEl } = dbTabs.meta[id];
+     main.innerHTML = `
+       <button class="back" id="back-main">&larr; Back</button>
+       <h2>New ${singular}</h2>
+       <form id="card-form">
+         <label>${singular} Name: <input type="text" id="card-name" required></label><br><br>
+         <button>Create</button>
+       </form>
+     `;
+     document.getElementById('card-form').addEventListener('submit', async e=>{
+       e.preventDefault();
+       const v = document.getElementById('card-name').value.trim();
+       if(v){
+         await addRecord(id, v);
+         const card = document.createElement('div');
+         card.className = 'card';
+         card.textContent = v;
+         card.addEventListener('click', ()=> loadView(v));
+         panelEl.appendChild(card);
+       }
+       loadDefault();
+     });
+     bindBack(); flipMobile();
+   });
+   // clicking "+" in tab bar loads new-tab form
+   addDataTabBtn.addEventListener('click', ()=>{
+     main.innerHTML = `
+       <button class="back" id="back-main">&larr; Back</button>
+       <h2>New Data Tab</h2>
+       <form id="tab-form">
+         <label>Tab Name (plural): <input type="text" id="tab-name" required></label><br><br>
+         <label>Item Name (singular): <input type="text" id="item-name" required></label><br><br>
+         <button>Create Tab</button>
+       </form>
+     `;
+     document.getElementById('tab-form').addEventListener('submit', async e=>{
+       e.preventDefault();
+       const p = document.getElementById('tab-name').value.trim();
+       const s = document.getElementById('item-name').value.trim();
+        if(p && s){
+          const tName = await addTable(p, s);
+          await dbTabs.addTab(p, s, tName);
+          // show footer when first table is created
+          footer.style.display = 'block';
+          addDataBtn.textContent = `+ New ${s}`;
+        }
+       loadDefault();
+     });
+     bindBack(); flipMobile();
+   });
+  // end init
+ })();
+</script>
 </body>
 </html>
