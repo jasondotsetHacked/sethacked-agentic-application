@@ -3,6 +3,16 @@ let db;
 export function initDB() {
   return new Promise((res, rej) => {
     const req = indexedDB.open('DataViewerDB');
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if(!d.objectStoreNames.contains('tables')) {
+        d.createObjectStore('tables', {keyPath:'tableName'});
+      }
+      if(!d.objectStoreNames.contains('records')) {
+        const store = d.createObjectStore('records', {keyPath:'id', autoIncrement:true});
+        store.createIndex('tableName', 'tableName');
+      }
+    };
     req.onsuccess = e => { db = e.target.result; res(db); };
     req.onerror = e => { console.error('IndexedDB open error:', e.target.error); rej(e.target.error); };
   });
@@ -24,6 +34,10 @@ export const addTable = (plural,singular)=> new Promise((res,rej)=>{
     const d = e.target.result;
     if(!d.objectStoreNames.contains('tables')) {
       d.createObjectStore('tables', {keyPath:'tableName'});
+    }
+    if(!d.objectStoreNames.contains('records')) {
+      const store = d.createObjectStore('records', {keyPath:'id', autoIncrement:true});
+      store.createIndex('tableName', 'tableName');
     }
     d.createObjectStore(plural, {keyPath:'id', autoIncrement:true});
   };
