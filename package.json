@@ -26,7 +26,7 @@
   "homepage": "https://github.com/jasondotsetHacked/sethacked-agentic-application#readme",
   "dependencies": {
     "dotenv": "^16.5.0",
-    "express.js": "^1.0.0",
+    "express": "^5.1.0",
     "openai": "^4.95.1",
     "sqlite3": "^5.1.7"
   }
