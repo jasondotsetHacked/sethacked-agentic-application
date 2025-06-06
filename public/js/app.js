@@ -1,7 +1,7 @@
-import { initResize } from './resize.js';
-import TabManager from './tabManager.js';
-import { initDB, getTables, addTable, getRecords, addRecord } from './db.js';
-import { loadDefault, loadView, loadIdentity, bindBack, flipMobile } from './ui.js';
+import { initResize } from './layout/resize.js';
+import TabManager from './dataviewer/tabManager.js';
+import { initDB, getTables, addTable, getRecords, addRecord } from './dataviewer/db.js';
+import { loadDefault, loadView, loadIdentity, bindBack, flipMobile } from './layout/ui.js';
 
 (async function(){
   const container = document.querySelector('.container');
