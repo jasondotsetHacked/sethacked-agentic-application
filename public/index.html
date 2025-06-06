@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sidebar with Tabs & Dynamic Cards</title>
   <style>
     /* ===== RESET & BASE ===== */
@@ -111,13 +111,13 @@
     <div class="identity"><h2>Identity control</h2></div>
     <div class="panel dataviewer">
       <div class="tabs" id="db-tabs">
-        <button class="add-tab" id="add-data-tab-btn">+</button>
+        <button class="add-tab" id="add-data-tab-btn" type="button" aria-label="Add new data tab">+</button>
       </div>
       <div class="scroll tab-panels" id="db-panels">
         <!-- panels generated from IndexedDB -->
       </div>
       <div class="footer">
-        <button id="add-data-btn">+ New Data Item</button>
+        <button id="add-data-btn" type="button">+ New Data Item</button>
       </div>
     </div>
   </div>
@@ -196,49 +196,71 @@
    }
    // ---- IndexedDB helpers ----
    let db;
-   const openDB = () => new Promise((res,rej)=>{
-     const req = indexedDB.open('DataViewerDB',1);
-     req.onupgradeneeded = e => {
-       const d = e.target.result;
-       if(!d.objectStoreNames.contains('tables')) d.createObjectStore('tables',{keyPath:'tableName'});
-       if(!d.objectStoreNames.contains('records')){
-         const st = d.createObjectStore('records',{keyPath:'id',autoIncrement:true});
-         st.createIndex('tableName','tableName',{unique:false});
-       }
+   const openDB = () => new Promise((res, rej) => {
+     // open existing database without forcing a lower version
+     const req = indexedDB.open('DataViewerDB');
+     req.onsuccess = e => res(e.target.result);
+     req.onerror   = e => {
+       console.error('IndexedDB open error:', e.target.error);
+       rej(e.target.error);
      };
-     req.onsuccess = e=>res(e.target.result);
-     req.onerror   = e=>rej(e.target.error);
    });
-   const getTables = ()=> new Promise((res,rej)=>{
+   const getTables = () => new Promise((res, rej) => {
      const tx = db.transaction('tables','readonly');
      const store = tx.objectStore('tables');
      const rq = store.getAll();
-     rq.onsuccess = ()=>res(rq.result);
-     rq.onerror   = ()=>rej(rq.error);
+     rq.onsuccess = () => res(rq.result.map(t => ({ tableName: t.tableName, plural: t.plural, singular: t.singular })));  
+     rq.onerror = () => { console.error('IndexedDB getTables error:', rq.error); rej(rq.error); };
    });
    const addTable = (plural,singular)=> new Promise((res,rej)=>{
-     const tx = db.transaction('tables','readwrite');
-     const store = tx.objectStore('tables');
-     const t = plural;
-     const rq = store.add({tableName:t,plural,singular});
-     rq.onsuccess = ()=>res(t);
-     rq.onerror   = ()=>rej(rq.error);
+     // bump DB version to create new object store for this table
+     const newVersion = db.version + 1;
+     db.close();
+     const req = indexedDB.open('DataViewerDB', newVersion);
+     req.onupgradeneeded = e => {
+       const d = e.target.result;
+       // ensure tables store exists
+       if(!d.objectStoreNames.contains('tables')) {
+         d.createObjectStore('tables', {keyPath:'tableName'});
+       }
+       // create data store for this table
+       d.createObjectStore(plural, {keyPath:'id', autoIncrement:true});
+     };
+     req.onsuccess = e => {
+       db = e.target.result;
+       // save metadata
+       const tx = db.transaction('tables','readwrite');
+       const store = tx.objectStore('tables');
+       const rq = store.add({tableName:plural,plural,singular});
+       rq.onsuccess = ()=>res(plural);
+       rq.onerror   = ()=>{ console.error('IndexedDB addTable error:', rq.error); rej(rq.error); };
+     };
+     req.onerror = e => { console.error('IndexedDB addTable error:', e.target.error); rej(e.target.error); };
    });
    const getRecords = table=> new Promise((res,rej)=>{
-     const tx = db.transaction('records','readonly');
-     const idx= tx.objectStore('records').index('tableName');
-     const rq = idx.getAll(table);
+     const tx = db.transaction(db.objectStoreNames.contains(table) ? table : 'records','readonly');
+     let rq;
+     if (tx.objectStoreNames.contains(table)) {
+       rq = tx.objectStore(table).getAll();
+     } else {
+       const store = tx.objectStore('records');
+       const idx = store.index('tableName');
+       rq = idx.getAll(table);
+     }
      rq.onsuccess = ()=>res(rq.result);
-     rq.onerror   = ()=>rej(rq.error);
+     rq.onerror   = ()=>{ console.error('IndexedDB getRecords error:', rq.error); rej(rq.error); };
    });
    const addRecord = (table,name)=> new Promise((res,rej)=>{
-     const tx = db.transaction('records','readwrite');
-     const store = tx.objectStore('records');
-     const rq = store.add({tableName:table,name});
+     // write to per-table store if exists, otherwise use legacy 'records'
+     const storeName = db.objectStoreNames.contains(table) ? table : 'records';
+     const tx = db.transaction(storeName,'readwrite');
+     const store = tx.objectStore(storeName);
+     const data = storeName === 'records' ? {tableName:table,name} : {name};
+     const rq = store.add(data);
      rq.onsuccess = ()=>res(rq.result);
-     rq.onerror   = ()=>rej(rq.error);
+     rq.onerror   = ()=>{ console.error('IndexedDB addRecord error:', rq.error); rej(rq.error); };
    });
-
+   
    // ---- initialize DB and UI ----
    /*** DATA VIEWER MODULE ***/
    // instantiate tab manager
