@@ -1,0 +1,96 @@
+    /* ===== RESET & BASE ===== */
+    * { box-sizing: border-box; }
+    html,body { margin:0; padding:0; height:100%; font-family:sans-serif; }
+    h2,h3 { margin:0; }
+    button { cursor:pointer; }
+
+    /* ===== LAYOUT GRID ===== */
+    .container {
+      --sidebar-w: 250px;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 8px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .sidebar {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border-right: 1px solid #000;
+      min-width: 0; min-height: 0;
+    }
+    .identity {
+      padding:10px; background:#f0f0f0;
+      border-bottom:1px solid #000; user-select:none;
+    }
+    .handle { background:#ddd; cursor:col-resize; }
+    .main {
+      position: relative; padding:20px;
+      overflow-y:auto; background:#fff;
+    }
+    .main .back {
+      display:none; position:absolute; top:10px; right:10px;
+      padding:6px; background:#eee; border:none;
+    }
+    @media(max-width:768px) {
+      .container { grid-template-columns:1fr; grid-template-rows:1fr auto; }
+      .handle { display:none; }
+      .sidebar { grid-row:1; }
+      .main    { grid-row:1; display:none; }
+      .main .back { display:block; }
+      .container.show-main .sidebar { display:none; }
+      .container.show-main .main    { display:block; }
+    }
+
+    /* ===== PANEL ===== */
+    .panel {
+      display:grid;
+      grid-template-rows: auto 1fr auto;  /* tabs / content / footer */
+      border-bottom:1px solid #000;
+      min-height:0;
+    }
+    /* TAB BAR */
+    .tabs {
+      display:flex; overflow-x:auto;
+      background:#e8e8e8; padding:4px 8px;
+      border-bottom:1px solid #ccc;
+    }
+    .tab {
+      flex:0 0 auto;
+      padding:6px 12px; margin-right:4px;
+      background:#fafafa; border:1px solid #ddd;
+      border-bottom:none; border-radius:4px 4px 0 0;
+    }
+    .tab.active {
+      background:#fff; font-weight:bold; border-color:#aaa;
+    }
+    .add-tab {
+      flex:0 0 auto;
+      padding:6px 12px; background:#d0d0d0;
+      border:1px solid #bbb; border-radius:4px;
+      font-weight:bold;
+    }
+
+    /* SCROLLABLE CONTENT */
+    .scroll {
+      padding:0 10px;
+      overflow-y:auto;
+      background:#fafafa;
+    }
+    .tab-panel {
+      display:none;
+    }
+    .tab-panel.active {
+      display:block;
+    }
+    .card {
+      margin:8px 0; padding:8px;
+      border:1px solid #666; background:#fff;
+      cursor:pointer;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding:8px 10px; background:#f9f9f9;
+      border-top:1px solid #ccc;
+    }
+    .footer button { width:100%; padding:6px; }
