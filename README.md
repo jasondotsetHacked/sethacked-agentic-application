@@ -1,1 +1,1 @@
-Initial commit — fresh start
+My plan is to make a general AI agent. Teachable, adaptable, and capable of learning from experience. Primarily for the purposes of employment. The same way a human employee would be onboarded, trained, and then given tasks to do, I want to do the same with an AI agent.
