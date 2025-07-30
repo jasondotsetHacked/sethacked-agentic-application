@@ -6,9 +6,9 @@ import { Text } from '../../primitives/Text/Text.js';
 import { Button } from '../../primitives/Button/Button.js';
 
 export function HeroBanner({
-  title = 'Welcome to Our App',
-  subtitle = 'Build once, run everywhere',
-  ctaText = 'Get Started',
+  title = 'Hero Banner',
+  subtitle = 'Hero Banner Subtitle',
+  ctaText = 'Hero Banner CTA',
   onCtaClick = () => {}
 }) {
   const container = document.createElement('section');
