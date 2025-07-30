@@ -1,7 +1,7 @@
 import { loadCSS } from '../../../utils/cssLoader.js';
 loadCSS('./src/components/layouts/MainLayout/MainLayout.css');
 
-export function MainLayout({ content }) {
+export function MainLayout({ content, footer } = {}) {
   const root = document.createElement('div');
   root.classList.add('main-layout');
 
@@ -10,5 +10,10 @@ export function MainLayout({ content }) {
   main.appendChild(content);
 
   root.appendChild(main);
+
+  if (footer) {
+    root.appendChild(footer);
+  }
+
   return root;
 }
