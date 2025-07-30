@@ -4,6 +4,8 @@ In development of the POC/MVP, I will be using something like the following.
 
 Nodejs
 Express
+Vanilla HTML, CSS, and JavaScript
+Frontend Architecture: primitives > modules > sections > layouts > pages
 OpenAI API
 SQLite
 Qdrant
