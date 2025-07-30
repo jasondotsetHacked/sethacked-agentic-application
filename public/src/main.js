@@ -1,4 +1,4 @@
-import { HomePage } from './components/pages/HomePage/HomePage.js';
+import { LandingPage } from './components/pages/LandingPage/LandingPage.js';
 
 const app = document.getElementById('app');
-HomePage(app);
+LandingPage(app);
