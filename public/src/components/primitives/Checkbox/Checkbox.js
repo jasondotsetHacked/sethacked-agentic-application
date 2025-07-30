@@ -1,3 +1,6 @@
+import { loadCSS } from '../../../utils/cssLoader.js';
+loadCSS('./src/components/primitives/Checkbox/Checkbox.css');
+
 export function Checkbox({ id, checked = false, onChange }) {
   const input = document.createElement('input');
   input.type = 'checkbox';

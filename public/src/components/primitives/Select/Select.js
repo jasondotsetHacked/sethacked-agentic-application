@@ -1,3 +1,6 @@
+import { loadCSS } from '../../../utils/cssLoader.js';
+loadCSS('./src/components/primitives/Select/Select.css');
+
 export function Select({ options = [], value, onChange }) {
   const select = document.createElement('select');
   select.classList.add('select');

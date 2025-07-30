@@ -1,9 +1,7 @@
-import { HeroSection } from '../../sections/HeroSection/HeroSection.js';
-
 import { loadCSS } from '../../../utils/cssLoader.js';
-loadCSS('./src/components/sections/HeroSection/HeroSection.css');
-loadCSS('./src/components/layouts/MainLayout/MainLayout.css');
 loadCSS('./src/components/pages/HomePage/HomePage.css');
+
+import { HeroSection } from '../../sections/HeroSection/HeroSection.js';
 
 import { MainLayout } from '../../layouts/MainLayout/MainLayout.js';
 

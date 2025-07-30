@@ -1,3 +1,6 @@
+import { loadCSS } from '../../../utils/cssLoader.js';
+loadCSS('./src/components/primitives/TextArea/TextArea.css');
+
 export function TextArea({
   value = '',
   placeholder = '',

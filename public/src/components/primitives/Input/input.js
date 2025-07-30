@@ -1,3 +1,6 @@
+import { loadCSS } from '../../../utils/cssLoader.js';
+loadCSS('./src/components/primitives/Input/Input.css');
+
 export function Input({ value = '', placeholder = '', type = 'text', onInput }) {
   const input = document.createElement('input');
   input.type = type;

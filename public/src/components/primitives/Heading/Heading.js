@@ -1,3 +1,6 @@
+import { loadCSS } from '../../../utils/cssLoader.js';
+loadCSS('./src/components/primitives/Heading/Heading.css');
+
 export function Heading({ level = 1, text, className = '' }) {
   const tag = `h${Math.min(Math.max(level, 1), 6)}`;
   const el = document.createElement(tag);

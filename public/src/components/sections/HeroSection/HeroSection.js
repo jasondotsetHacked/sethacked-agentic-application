@@ -1,8 +1,7 @@
-import { HeroBanner } from '../../modules/HeroBanner/HeroBanner.js';
-
 import { loadCSS } from '../../../utils/cssLoader.js';
-loadCSS('./src/components/modules/HeroBanner/HeroBanner.css');
 loadCSS('./src/components/sections/HeroSection/HeroSection.css');
+
+import { HeroBanner } from '../../modules/HeroBanner/HeroBanner.js';
 
 export function HeroSection() {
   const section = document.createElement('div');

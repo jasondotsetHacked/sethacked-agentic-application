@@ -1,3 +1,6 @@
+import { loadCSS } from '../../../utils/cssLoader.js';
+loadCSS('./src/components/primitives/Button/Button.css');
+
 export function Button({ text, onClick, type = 'button', disabled = false }) {
   const btn = document.createElement('button');
   btn.type = type;
