@@ -8,9 +8,9 @@ export function HeroSection() {
   section.classList.add('hero-section');
   section.appendChild(
     HeroBanner({
-      title: 'Launch Your Project',
-      subtitle: 'Fast, reliable, and framework‑free.',
-      ctaText: 'Try It Now',
+      title: 'setHacked',
+      subtitle: 'I\'m just here coding and stuff.',
+      ctaText: 'Ya feel me?',
       onCtaClick: () => alert('Let’s get started!')
     })
   );
