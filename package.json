@@ -1,0 +1,24 @@
+{
+  "name": "sethacked-agentic-application",
+  "version": "0.0.1",
+  "description": "Check out https://github.com/jasondotsetHacked/sethacked-agentic-application#readme for a description.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasondotsetHacked/sethacked-agentic-application.git"
+  },
+  "author": "Jason Clay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jasondotsetHacked/sethacked-agentic-application/issues"
+  },
+  "homepage": "https://github.com/jasondotsetHacked/sethacked-agentic-application#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "openai": "^5.10.2"
+  }
+}
