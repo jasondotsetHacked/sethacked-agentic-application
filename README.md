@@ -10,4 +10,16 @@ OpenAI API
 SQLite
 Qdrant
 ```
+### Frontend Architecture
+
+The frontend follows a layered composition pattern that builds larger features from small, reusable pieces:
+
+1. **Primitives** – Low-level UI elements such as buttons, inputs, and other single-purpose components.
+2. **Modules** – Small groups of primitives that deliver a discrete piece of functionality, like a form field with validation.
+3. **Sections** – Page fragments assembled from modules, for example a hero banner, footer, or product grid.
+4. **Layouts** – Structural wrappers that arrange sections and provide shared page chrome like navigation or sidebars.
+5. **Pages** – Complete screens composed of layouts and their sections for a specific route.
+
+This hierarchy keeps the UI scalable and easy to reason about as features grow.
+
 In production, I will be building in the AWS ecosystem.
