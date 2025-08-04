@@ -1,0 +1,35 @@
+.feature-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  max-width: 100%;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.feature-card__title {
+  margin-bottom: 0.5rem;
+}
+
+.feature-card__description {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.feature-card__button {
+  align-self: center;
+}
+
+@media (min-width: 600px) {
+  .feature-card {
+    max-width: 400px;
+    padding: 2rem;
+    text-align: left;
+  }
+
+  .feature-card__button {
+    align-self: flex-start;
+  }
+}
