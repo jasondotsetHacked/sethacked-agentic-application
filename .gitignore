@@ -1,3 +1,4 @@
 /node_modules
 /private
 .env
+public/src/components/modules/visualizeModule.html
