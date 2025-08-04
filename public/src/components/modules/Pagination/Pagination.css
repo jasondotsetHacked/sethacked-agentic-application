@@ -1,0 +1,36 @@
+/* public/src/components/modules/Pagination/Pagination.css */
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination__list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pagination__button {
+  min-width: 2.5rem;
+}
+
+.pagination__prev,
+.pagination__next {
+  min-width: 4rem;
+}
+
+@media (max-width: 480px) {
+  .pagination__button {
+    min-width: 2rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .pagination__prev,
+  .pagination__next {
+    min-width: 3rem;
+  }
+}
