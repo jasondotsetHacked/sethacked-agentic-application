@@ -1,0 +1,48 @@
+/* public/src/components/modules/FeatureGrid/FeatureGrid.css */
+.feature-grid {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.feature-grid__title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.feature-grid__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.feature-grid__item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.feature-grid__item-heading {
+  margin-bottom: 0.5rem;
+}
+
+.feature-grid__item-text {
+  margin: 0;
+  color: #555;
+}
+
+@media (min-width: 600px) {
+  .feature-grid__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .feature-grid__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
