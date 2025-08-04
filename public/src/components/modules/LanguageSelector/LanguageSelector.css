@@ -1,0 +1,31 @@
+/* public/src/components/modules/LanguageSelector/LanguageSelector.css */
+.language-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.language-selector__title {
+  margin: 0;
+}
+
+.language-selector__control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .language-selector__control {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .language-selector__label {
+    margin-bottom: 0.25rem;
+  }
+
+  .language-selector__select {
+    width: 100%;
+  }
+}
