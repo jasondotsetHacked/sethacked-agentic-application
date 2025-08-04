@@ -1,0 +1,48 @@
+/* public/src/components/modules/NavigationBar/NavigationBar.css */
+.navigation-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.navigation-bar__brand {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.navigation-bar__toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid #333;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.navigation-bar__menu {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 600px) {
+  .navigation-bar__toggle {
+    display: block;
+  }
+  .navigation-bar__menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+  .navigation-bar__menu.navigation-bar__menu--open {
+    display: flex;
+  }
+  .navigation-bar__menu li {
+    padding: 0.5rem 0;
+  }
+}
+
