@@ -1,0 +1,33 @@
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.file-upload__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.file-upload__input {
+  flex: 1;
+}
+
+.file-upload__filename {
+  font-size: 0.875rem;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .file-upload__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .file-upload__button {
+    width: 100%;
+  }
+}
