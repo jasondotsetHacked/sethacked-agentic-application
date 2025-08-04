@@ -1,0 +1,58 @@
+/* public/src/components/modules/CookieConsentBanner/CookieConsentBanner.css */
+.cookie-consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  padding: 1rem;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.cookie-consent-banner__message {
+  margin: 0 0 1rem;
+}
+
+.cookie-consent-banner__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cookie-consent-banner__button {
+  width: 100%;
+}
+
+.cookie-consent-banner__link {
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 600px) {
+  .cookie-consent-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cookie-consent-banner__message {
+    margin: 0;
+    max-width: 60%;
+  }
+
+  .cookie-consent-banner__actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cookie-consent-banner__button {
+    width: auto;
+  }
+
+  .cookie-consent-banner__link {
+    margin-left: 1rem;
+  }
+}
