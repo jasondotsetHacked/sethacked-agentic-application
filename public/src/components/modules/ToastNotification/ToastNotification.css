@@ -1,0 +1,56 @@
+/* public/src/components/modules/ToastNotification/ToastNotification.css */
+.toast-notification {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  max-width: calc(100% - 2rem);
+  z-index: 1000;
+}
+
+.toast-notification__message {
+  flex: 1;
+  margin: 0;
+}
+
+.toast-notification__close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toast-notification--success {
+  background-color: #28a745;
+}
+
+.toast-notification--error {
+  background-color: #dc3545;
+}
+
+.toast-notification--info {
+  background-color: #007bff;
+}
+
+.toast-notification--warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+@media (max-width: 480px) {
+  .toast-notification {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: none;
+  }
+}
