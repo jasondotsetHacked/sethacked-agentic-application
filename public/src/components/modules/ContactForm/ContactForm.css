@@ -1,0 +1,21 @@
+/* public/src/components/modules/ContactForm/ContactForm.css */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.contact-form__heading {
+  margin-bottom: 0.5rem;
+}
+
+.contact-form__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form__submit {
+  align-self: flex-start;
+}
