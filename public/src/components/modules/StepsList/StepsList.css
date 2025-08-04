@@ -1,0 +1,43 @@
+.steps-list {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.steps-list__title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.steps-list__list {
+  list-style: decimal inside;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.steps-list__item {
+  margin: 0;
+}
+
+.steps-list__item-title {
+  margin: 0 0 0.25rem;
+}
+
+.steps-list__item-description {
+  margin: 0;
+  color: #555;
+}
+
+@media (min-width: 600px) {
+  .steps-list__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .steps-list__item {
+    flex: 1 1 calc(50% - 1rem);
+  }
+}
